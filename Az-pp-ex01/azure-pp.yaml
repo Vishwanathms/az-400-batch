@@ -1,0 +1,38 @@
+pool:
+  name: agentpool1
+  demands: maven
+
+variables:
+  mavenPOMFile: 'pom.xml'
+
+jobs:
+- job: "linux-commands"
+  pool:
+    name: linux-vm
+  steps:
+    - script: echo "hello world"
+    - task: Maven@3
+      displayName: 'Maven pom.xml'
+      inputs:
+        mavenPomFile: '$(mavenPOMFile)'
+      #condition: succeeded()  
+      condition:  or( succeeded()  , eq(variables['Build.SourceBranch'], 'refs/heads/b1'))
+      
+- job: "Win-commands"
+  pool:
+    name: Win-vm
+  steps:
+    - powershell: $date = Get-Date
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.x'
+      displayName: 'Use .NET Core SDK'
+
+- job: "Win-commands"
+  steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '7.x'
+      displayName: 'Use .NET Core SDK'

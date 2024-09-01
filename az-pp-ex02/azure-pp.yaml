@@ -1,0 +1,17 @@
+pool:
+  name: agentpool1
+  demands: maven
+
+variables:
+  mavenPOMFile: 'pom.xml'
+
+jobs:
+- job: "linux-commands"
+  steps:
+    - script: echo "hello world"
+    - task: Maven@3
+      displayName: variables['Build.SourceBranch']
+      inputs:
+        mavenPomFile: '$(mavenPOMFile)'
+
+      
